@@ -1,11 +1,7 @@
 (async function() { ////////////////////////////////////////////////////
 
-  const $ = document.querySelector.bind(document)
-  const $$ = document.querySelectorAll.bind(document)
   const debounce = (ms, f) => { let t; return (...args) => {
     clearTimeout(t); t = setTimeout(() => {f.apply(null, args)}, ms) }}
-  Element.prototype.attr = function(k,v) {
-    return this[`${v ? 'set' : v===null ? 'remove' : 'get'}Attribute`](k,v)}
 
   //////////////////////////////////////////////////////////////////////
 
@@ -30,8 +26,6 @@
       , kENT  = 2
       , kNAME = 3
 
-  const CTRL = '<control>'
-
 
   const NCOLS = 20
 
@@ -53,7 +47,7 @@
       // TODO: we could precalculate all of this
       const c = alluni[i].split(';')
       const isctrl = c[1] && c[1][0]=='<'
-      const ent = isctrl ? ' ' : `&#x${c[0]}`
+      const ent = isctrl ? ' ' : `&#x${c[0]};`
       const name = isctrl ? c[kuUNI1NAME] : c[kuNAME]
       const dec = parseInt(c[kuCODE], 16)
       alluni[i] = [i, dec, ent, name]
@@ -87,7 +81,6 @@
     const firstrow = Math.floor(y/ch)
     const firstcell = firstrow * NCOLS
     const lastrow = firstrow + nrows + 1
-//    const lastcell = Math.min(ulen, lastrow * NCOLS)
     const lastcell = lastrow * NCOLS
     const ty = firstrow * ch
     const pres = cells.children
@@ -150,7 +143,7 @@
     const s = docelem.scrollTop
     const cr = elem.getBoundingClientRect()
     const cy = cr.y + s
-    const i = elem.idx //parseInt(elem.attr('data-i'), 10)
+    const i = elem.idx
     const c = alluni[i]
     info_rune.innerHTML = c[kENT]
     info_name.innerText = c[kNAME]
@@ -160,7 +153,7 @@
     const ir = info.getBoundingClientRect()
     const cright = cr.x + cr.width
     const ix = (cright + ir.width) <= vw ? cright : (cr.left - ir.width)
-    const iy = Math.min(((vh+s) - ir.height), cy)
+    const iy = Math.max(s, Math.min(((vh+s) - ir.height), cy))
     info.style.transform = `translate(${ix|0}px, ${iy|0}px)`
   }
 
@@ -172,7 +165,6 @@
         info_copied.className = 'show'
         setTimeout(() => {info_copied.className = ''}, 750)
       })
-
   }
 
   searchq.onfocus = hide_info
@@ -184,8 +176,14 @@
   window.onscroll = render
   window.onresize = () => { set_sizes(); render(); }
 
+  info.onclick = e => { e.stopPropagation() }
+
   document.onclick = e => {
-    if (e.target.className == 'cell') { show_info(e.target) }
+    const t = e.target
+    if ((t.className == 'cell') && !t.getAttribute('disabled'))
+      show_info(e.target)
+    else
+      hide_info()
   }
 
   document.onkeypress = e => {
