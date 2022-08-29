@@ -6,6 +6,10 @@ html, body {
   font-family: sans-serif;
 }
 
+pre {
+  font-family: sans-serif;
+}
+
 
 #cells_wrapper {
   padding-bottom: 60px;
@@ -21,7 +25,6 @@ html, body {
 
 
 .cell {
-  font-family: sans-serif;
   display: inline-block;
   width: 5vw;
   height: 5vw;
@@ -33,9 +36,14 @@ html, body {
 /*  overflow: hidden;*/
 }
 
-.cell:hover {
+.cell:not([disabled]):hover {
   background: #fafafa;
   cursor: pointer;
+}
+
+.cell[disabled] {
+  border: none;
+  cursor: default;
 }
 
 #loading {

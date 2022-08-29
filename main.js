@@ -9,21 +9,26 @@
 
   //////////////////////////////////////////////////////////////////////
 
-  const kCODE        =  0
-      , kNAME        =  1
-      , kCATEGORY    =  2
-      , kCOMB_CLASS  =  3
-      , kBIDI_CLASS  =  4
-      , kDECOMP      =  5
-      , kDECIMAL     =  6
-      , kDIGIT       =  7
-      , kNUMERIC     =  8
-      , kBIDI_MIRROR =  9
-      , UNI1NAME     = 10
-      , kCOMMENT     = 11
-      , kUPPER       = 12
-      , kLOWER       = 13
-      , kTITLE       = 14
+  const kuCODE        =  0
+      , kuNAME        =  1
+      , kuCATEGORY    =  2
+      , kuCOMB_CLASS  =  3
+      , kuBIDI_CLASS  =  4
+      , kuDECOMP      =  5
+      , kuDECIMAL     =  6
+      , kuDIGIT       =  7
+      , kuNUMERIC     =  8
+      , kuBIDI_MIRROR =  9
+      , kuUNI1NAME    = 10
+      , kuCOMMENT     = 11
+      , kuUPPER       = 12
+      , kuLOWER       = 13
+      , kuTITLE       = 14
+
+  const kI    = 0
+      , kD    = 1
+      , kENT  = 2
+      , kNAME = 3
 
   const CTRL = '<control>'
 
@@ -45,9 +50,13 @@
     alluni = text.split('\n')
     const ulen = alluni.length
     for (let i=0; i < ulen; ++i) {
+      // TODO: we could precalculate all of this
       const c = alluni[i].split(';')
-      c.i=i; c.d=parseInt(c[0],16)
-      alluni[i] = c
+      const isctrl = c[1] && c[1][0]=='<'
+      const ent = isctrl ? ' ' : `&#x${c[0]}`
+      const name = isctrl ? c[kuUNI1NAME] : c[kuNAME]
+      const dec = parseInt(c[kuCODE], 16)
+      alluni[i] = [i, dec, ent, name]
     }
     uni = blockuni = alluni
     set_sizes()
@@ -59,35 +68,50 @@
     cw = cells.firstElementChild.offsetWidth
     ch = cells.firstElementChild.offsetHeight
     nrows = Math.ceil(vh/ch)
-    update_height()
+    reset()
   }
 
-  function update_height() {
+  function reset() {
     totheight = ch * Math.ceil(uni.length / NCOLS)
     cells_wrapper.style.height = `${totheight + 80}px`
+    let h = ''
+    const ncells = (nrows+1)*NCOLS
+    for (let i=0; i < ncells; ++i) { h+= '<pre class=cell> </pre>' }
+    cells.innerHTML = h
   }
 
   function render() {
     if (!uni) { return }
     const y = Math.max(0, window.scrollY)
+    const ulen = uni.length
     const firstrow = Math.floor(y/ch)
     const firstcell = firstrow * NCOLS
     const lastrow = firstrow + nrows + 1
-    const lastcell = Math.min(uni.length, lastrow * NCOLS)
+//    const lastcell = Math.min(ulen, lastrow * NCOLS)
+    const lastcell = lastrow * NCOLS
     const ty = firstrow * ch
-    let h = ''
+    const pres = cells.children
     for (let i=firstcell; i < lastcell; ++i) {
-      const c = uni[i]
-      h += `<pre class=cell data-i=${c.i}>&#x${c[kCODE]};</pre>`
+      const p = i-firstcell
+      const pre = pres[p]
+      if (p < ulen) {
+        const c = uni[i]
+        pre.idx = c[kI]
+        pre.innerHTML = c[kENT]
+        pre.removeAttribute('disabled')
+      } else {
+        pre.setAttribute('disabled', true)
+        pre.innerHTML = ' '
+      }
     }
-    cells.innerHTML = h
     cells.style.transform = `translateY(${ty}px)`
   }
 
   function rerender() {
     window.onscroll = null
+    window.scrollTop = 0
     scroll(0,0)
-    update_height()
+    reset()
     render()
     window.onscroll = render
   }
@@ -95,15 +119,15 @@
   function in_block(b) {
     const B = BLOCKS[parseInt(b, 10)]
     const min=B[0], max=B[1]
-    return alluni.filter(c => ((min <= c.d) && (c.d <= max)))
+    return alluni.filter(c => ((min <= c[kD]) && (c[kD] <= max)))
   }
 
   function show_block() {
+    searchq.value = ''
     const b = blocks.value
     if (b == 'x') {
-      blockuni = alluni
+      uni = blockuni = alluni
     } else {
-      searchq.value = ''
       blockuni = in_block(b)
       uni = blockuni
     }
@@ -126,11 +150,10 @@
     const s = docelem.scrollTop
     const cr = elem.getBoundingClientRect()
     const cy = cr.y + s
-    const i = parseInt(elem.attr('data-i'), 10)
+    const i = elem.idx //parseInt(elem.attr('data-i'), 10)
     const c = alluni[i]
-    info_rune.innerHTML = `&#x${c[kCODE]};`
-    const name = c[kNAME] == CTRL ? c[UNI1NAME] : c[kNAME]
-    info_name.innerText = name
+    info_rune.innerHTML = c[kENT]
+    info_name.innerText = c[kNAME]
     let block = BLOCKS.find(b => ((b[0] <= i) && (i <= b[1])))
     info_block.innerText = block[2]
     info.className = 'show'
