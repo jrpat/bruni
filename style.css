@@ -1,0 +1,160 @@
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
+}
+
+
+#cells_wrapper {
+  padding-bottom: 60px;
+}
+
+
+#cells {
+  z-index: 2;
+  background-color: #fff;
+  position: relative;
+  min-height: 100vh;
+}
+
+
+.cell {
+  font-family: sans-serif;
+  display: inline-block;
+  width: 5vw;
+  height: 5vw;
+  text-align: center;
+  font-size: 2rem;
+  line-height: 5vw;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+/*  overflow: hidden;*/
+}
+
+.cell:hover {
+  background: #fafafa;
+  cursor: pointer;
+}
+
+#loading {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  line-height: 100vh;
+  font-size: 4rem;
+  color: #eee;
+}
+
+#controls {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f4f4f4;
+  border-top: 1px solid #eee;
+  z-index: 9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5em; 
+}
+
+#searchq {
+  font-size: 1.4rem;
+}
+
+#info {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+
+  font-family: sans-serif;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  box-shadow: 0 8px 20px rgba(0, 0, 20, 0.2);
+  width: 300px;
+  border-radius: 5px;
+  padding: 0 1.5em 1em 1.5em;
+}
+
+#info_rune {
+  width: 100%;
+  padding: 0.5em;
+  font-size: 4rem;
+  text-align: center;
+}
+
+#info_name {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+#info_hide {
+  --size: 13px;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  height: var(--size);
+  width: var(--size);
+  line-height: 0;
+  background: #ddd;
+  border: 1px solid rgba(0,0,0, 0.025);
+  color: rgba(0,0,0, 0.2);
+  border-radius: 100%;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 2px;
+  text-align: center;
+  box-shadow: inset 0 2px 1px rgba(0,0,20, 0.025);
+  font-size: 13px;
+}
+
+#info_hide:after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  padding: 5px;
+  box-sizing: content-box;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#info_hide:hover {
+  color: rgba(0,0,0, 0.5);
+  background-color: #ccc;
+}
+
+#info_hide:active {
+  background-color: #aaa;
+}
+
+#info table {
+  font-size: 0.875rem;
+}
+
+#info td {
+  margin-bottom: 1em;
+}
+
+#info td:first-child {
+  text-align: right;
+  padding-right: 1em;
+  color: #777;
+}
+
+#info.show {
+  display: block;
+}
+
