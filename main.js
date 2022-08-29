@@ -166,12 +166,20 @@
 
   window.hide_info = () => { info.className = '' }
 
+  function copy_rune() {
+    navigator.clipboard.writeText(info_rune.innerText)
+      .then(() => {
+        info_copied.className = 'show'
+        setTimeout(() => {info_copied.className = ''}, 750)
+      })
+
+  }
 
   searchq.onfocus = hide_info
   searchq.oninput = debounce(100, filter)
   searchq.onkeypress = e => { (e.key == 'Enter') && e.target.blur() }
-
   blocks.onchange = show_block
+  info_rune.onclick = copy_rune
 
   window.onscroll = render
   window.onresize = () => { set_sizes(); render(); }

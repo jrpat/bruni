@@ -95,10 +95,33 @@ pre {
 }
 
 #info_rune {
-  width: 100%;
-  padding: 0.5em;
+  margin: 10px 50px;
+  padding: 20px 0.5em;
   font-size: 4rem;
   text-align: center;
+  cursor: pointer;
+  line-height: 1em;
+  border-radius: 10px;
+}
+
+#info_rune:hover {
+  background-color: #ddd;
+}
+
+#info_copied {
+  opacity: 0;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  line-height: 1;
+  font-size: 0.75rem;
+  color: #aaa;
+  transition: opacity 0.25s ease-in;
+}
+
+#info_copied.show {
+  opacity: 1;
+  transition: none;
 }
 
 #info_name {
