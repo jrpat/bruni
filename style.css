@@ -75,6 +75,7 @@ pre {
 }
 
 #searchq {
+  -webkit-appearance: textfield;
   font-size: 1.4rem;
 }
 
