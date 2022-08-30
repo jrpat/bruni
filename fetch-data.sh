@@ -1,6 +1,7 @@
 #!/bin/sh
 
-url='http://unicode.org/Public/UNIDATA/UnicodeData.txt'
+UDATA='https://unicode.org/Public/UNIDATA/UnicodeData.txt'
+BLOCK='https://unicode.org/Public/UNIDATA/Blocks.txt'
 
 cmd=curl
 
@@ -15,5 +16,6 @@ if ! command -v curl &>/dev/null ; then
   fi
 fi
 
-$cmd "$url" > UnicodeData.txt
+$cmd "$UDATA" > UnicodeData.txt
+$cmd "$BLOCK" > Blocks.txt
 
