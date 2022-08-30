@@ -3,10 +3,10 @@
   const debounce = (ms, f) => {let t; return (...args) => {
     clearTimeout(t); t = setTimeout(f.bind(null, ...args), ms) }}
 
-  const throttle = (ms, f) => {let t,now,d=0; return (...args) => {
-    now=Date.now(); clearTimeout(t);
-    if (now-d > ms) { d=now; f.apply(null, ...args) }
-    else { t = setTimeout(f.bind(null, ...args), ms) }}}
+//  const throttle = (ms, f) => {let t,now,d=0; return (...args) => {
+//    now=Date.now(); clearTimeout(t);
+//    if (now-d > ms) { d=now; f.apply(null, ...args) }
+//    else { t = setTimeout(f.bind(null, ...args), ms) }}}
 
   //////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@
 
   let nrows, totheight 
 
-  let xrows = 2
+  let xrows = 0
 
   const docelem = document.documentElement
 
@@ -108,7 +108,8 @@
     cells.style.transform = 'translateY('+ty+'px)'
   }
 
-  const onscroll = throttle(~~(1000/30), render)
+//  const onscroll = throttle(~~(1000/30), render)
+  const onscroll = render
 
   function rerender() {
     window.onscroll = null
