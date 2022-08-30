@@ -29,7 +29,7 @@
   const kI    = 0
       , kD    = 1
       , kCTRL = 2
-      , kENT  = 3
+      , kRUNE = 3
       , kNAME = 4
 
 
@@ -49,16 +49,17 @@
   async function init() {
     const resp = await fetch('UnicodeData.txt')
     const text = await resp.text()
-    alluni = text.split('\n')
+    alluni = text.trim().split('\n')
+    window.uni = alluni
     const ulen = alluni.length
     for (let i=0; i < ulen; ++i) {
       // TODO: we could precalculate all of this
       const c = alluni[i].split(';')
-      const isctrl = c[1] && c[1][0]=='<'
-      const ent = '&#x'+c[0]+';'
-      const name = isctrl ? c[kuUNI1NAME] : c[kuNAME]
-      const dec = parseInt(c[kuCODE], 16)
-      alluni[i] = [i, dec, isctrl, ent, name]
+      const d = parseInt(c[kuCODE], 16)
+      const ctrl = c[1] && c[1][0]=='<'
+      let rune = String.fromCodePoint(d)
+      const name = ctrl ? c[kuUNI1NAME] : c[kuNAME]
+      alluni[i] = [i, d, ctrl, rune, name]
     }
     uni = blockuni = alluni
     set_sizes()
@@ -78,7 +79,12 @@
     cells_wrapper.style.height = (totheight + 80)+'px'
     let h = ''
     const ncells = (nrows+1)*NCOLS
-    for (let i=0; i < ncells; ++i) { h+= '<pre class=cell> </pre>' }
+    for (let i=0; i < ncells; ++i) {
+      const y = (~~(i / NCOLS)) * ch
+      const x = (i % NCOLS) * cw
+      const s = `transform:translate(${x}px, ${y}px)`
+      h += '<pre style="'+s+'" class=cell></pre>';
+    }
     cells.innerHTML = h
   }
 
@@ -92,19 +98,21 @@
     const lastcell = lastrow * NCOLS
     const ty = firstrow * ch
     const pres = cells.children
+    cells.style.visibility = 'hidden'
     for (let i=firstcell; i < lastcell; ++i) {
       const p = i-firstcell
-      const pre = pres[p]
-      if (p < ulen) {
+      const x = pres[p]
+      if (i < ulen) {
         const c = uni[i]
-        pre.idx = c[kI]
-        pre.innerHTML = c[kCTRL] ? ' ' : c[kENT]
-        pre.removeAttribute('disabled')
+        x.idx = c[kI]
+        x.textContent = c[kCTRL] ? '' : c[kRUNE]
+        x.removeAttribute('disabled')
       } else {
-        pre.setAttribute('disabled', true)
-        pre.innerHTML = ' '
+        x.setAttribute('disabled', true)
+        x.innerHTML = ''
       }
     }
+    cells.style.visibility = null
     cells.style.transform = 'translateY('+ty+'px)'
   }
 
@@ -153,12 +161,11 @@
   function show_info(elem) {
     const c = alluni[elem.idx]
     const d = c[kD]
-    const ent = c[kENT]
-    info_rune.innerHTML = ent
-    info_name.innerText = c[kNAME]
+    info_rune.textContent = c[kRUNE]
+    info_name.textContent = c[kNAME]
     let block = BLOCKS.find(b => ((b[0] <= d) && (d <= b[1])))
-    info_block.innerText = block[2]
-    info_hex.innerText = '0x'+ent.slice(3,-1)
+    info_block.textContent = block[2]
+    info_hex.textContent = '0x'+c[kD].toString(16)
 
     const s = docelem.scrollTop
     const e = elem.getBoundingClientRect()
@@ -173,7 +180,7 @@
   window.hide_info = () => { info.className = '' }
 
   async function copy_info(e) {
-    await navigator.clipboard.writeText(e.target.innerText)
+    await navigator.clipboard.writeText(e.target.textContent)
     info_copied.className = 'show'
     setTimeout(() => {info_copied.className = ''}, 750)
   }
@@ -535,7 +542,7 @@
     [0xE0100,0xE01EF,'Variation Selectors Supplement'],
     [0xF0000,0xFFFFF,'Supplementary Private Use Area-A'],
     [0x100000,0x10FFFF,'Supplementary Private Use Area-B'],
-  ]
+  ] // --BLOCKS-- (this comment needed by update-blocks.sh)
 
   const blen = BLOCKS.length
   for (let i=0; i < blen; ++i) {

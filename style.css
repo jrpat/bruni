@@ -25,7 +25,9 @@ pre {
 
 
 .cell {
-  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 5vw;
   height: 5vw;
   text-align: center;
@@ -33,7 +35,6 @@ pre {
   line-height: 5vw;
   border-right: 1px solid #eee;
   border-bottom: 1px solid #eee;
-/*  overflow: hidden;*/
 }
 
 .cell:not([disabled]):hover {
