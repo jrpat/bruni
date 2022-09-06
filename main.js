@@ -47,8 +47,12 @@
   const docelem = document.documentElement
 
   async function init() {
-    const resp = await fetch('UnicodeData.txt')
-    const text = await resp.text()
+    let text = localStorage.getItem('unidata')
+    if (!text) {
+      const resp = await fetch('UnicodeData.txt')
+      text = await resp.text()
+      localStorage.setItem('unidata', text)
+    }
     alluni = text.trim().split('\n')
     window.uni = alluni
     const ulen = alluni.length
