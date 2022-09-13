@@ -8,9 +8,7 @@ cmd=curl
 if ! command -v curl &>/dev/null ; then
   cmd='wget -qO-'
   if ! command -v wget &>/dev/null ; then
-    echo "Could not fetch unicode data from"
-    echo "$url"
-    echo
+    echo "Could not fetch unicode data."
     echo "Please install curl or wget."
     exit 1
   fi
