@@ -213,6 +213,8 @@
     if (e.metaKey || (e.target.tagName == 'INPUT')) { return }
     event.preventDefault()
     if (e.key == '/') { searchq.focus() }
+    if (e.key == '#') { blocks.focus() }
+    if (e.key == 'Escape') { hide_info() }
   }
 
 
