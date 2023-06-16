@@ -1,6 +1,30 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
+
+:root {
+  --bg: #fff;
+  --bg-hover: #fafafa;
+  --bg-above: #f4f4f4;
+  --cell-border: #eee;
+  --info-hover: #dfdfdf;
+  --info-border: #ccc;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --bg-hover: #272727;
+    --bg-above: #2c2c2c;
+    --cell-border: #333;
+    --info-hover: #393939;
+    --info-border: #4a4a4a;
+  }
+}
+
+
 html, body {
+  color-scheme: light dark;
   width: 100%;
   height: 100%;
   font-family: sans-serif;
@@ -18,7 +42,7 @@ pre {
 
 #cells {
   z-index: 2;
-  background-color: #fff;
+  background-color: var(--bg);
   position: relative;
   min-height: 100vh;
 }
@@ -33,12 +57,12 @@ pre {
   text-align: center;
   font-size: 2rem;
   line-height: 5vw;
-  border-right: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  border-right: 1px solid var(--cell-border);
+  border-bottom: 1px solid var(--cell-border);
 }
 
 .cell:not([disabled]):hover {
-  background: #fafafa;
+  background: var(--bg-hover);
   cursor: pointer;
 }
 
@@ -66,8 +90,8 @@ pre {
   bottom: 0;
   width: 100%;
   height: 60px;
-  background-color: #f4f4f4;
-  border-top: 1px solid #eee;
+  background-color: var(--bg-above);
+  border-top: 1px solid var(--cell-border);
   z-index: 9;
   display: flex;
   justify-content: space-between;
@@ -92,8 +116,8 @@ pre {
   left: 0;
 
   font-family: sans-serif;
-  background: #f2f2f2;
-  border: 1px solid #ccc;
+  background: var(--bg-above);
+  border: 1px solid var(--info-border);
   box-shadow: 0 8px 20px rgba(0, 0, 20, 0.2);
   width: 300px;
   border-radius: 5px;
@@ -111,7 +135,7 @@ pre {
 }
 
 #info_rune:hover {
-  background-color: #ddd;
+  background-color: var(--info-hover);
 }
 
 #info_copied {
@@ -143,9 +167,9 @@ pre {
   height: var(--size);
   width: var(--size);
   line-height: 0;
-  background: #ddd;
+  background: var(--bg-above);
   border: 1px solid rgba(0,0,0, 0.025);
-  color: rgba(0,0,0, 0.2);
+  color: ButtonFace;
   border-radius: 100%;
   margin: 0;
   padding: 0;
@@ -158,9 +182,9 @@ pre {
 #info_hide:after {
   content: '';
   position: absolute;
-  top: -5px;
-  left: -5px;
-  padding: 5px;
+  top: -10px;
+  left: -10px;
+  padding: 10px;
   box-sizing: content-box;
   background: transparent;
   width: 100%;
@@ -169,8 +193,8 @@ pre {
 }
 
 #info_hide:hover {
-  color: rgba(0,0,0, 0.5);
-  background-color: #ccc;
+  color: ButtonText;
+  background-color: var(--info-hover);
 }
 
 #info_hide:active {
@@ -204,7 +228,7 @@ pre {
 }
 
 #info_hex:hover {
-  background: #ddd;
+  background: var(--info-hover);
 }
 
 #info.show {
