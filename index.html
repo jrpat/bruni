@@ -3,13 +3,14 @@
   <head>
     <title>Unicode Browser</title>
     <link rel=stylesheet href="style.css" />
+    <meta name="viewport" content="width=device-width">
   </head>
   <body>
     <div id=cells_wrapper>
       <div id=cells>
         <pre class=cell></pre>
       </div>
-      <b id=loading>Loading...</b>
+      <b id=loading></b>
     </div>
 
     <div id=controls>
@@ -34,5 +35,12 @@
   </body>
 
   <script src="main.js"></script>
+  <script>
+    if ((window.innerWidth < 600) || (window.innerHeight < 330)) {
+      alert(`Brunicode is optimized for larger screens.
+
+You can still use it, but it's better on desktop.`)
+    }
+  </script>
 </html>
 
